@@ -7,7 +7,7 @@ import '../colors/color.dart';
 
 TextStyle titleOfCard = GoogleFonts.staatliches(
   fontSize: 8,
-  color: darkThemeBackgroundColor,
+  // color: darkThemeBackgroundColor,
   decoration: TextDecoration.none,
 );
 TextStyle subTitleOfCard = GoogleFonts.staatliches(
@@ -91,7 +91,7 @@ TextStyle header2BlackFont = GoogleFonts.staatliches(
   decoration: TextDecoration.none,
 );
 TextStyle header1GreenFont = GoogleFonts.staatliches(
-  fontSize: 37,
+  fontSize: 25,
   color: appBarColor,
   fontWeight: FontWeight.bold,
   decoration: TextDecoration.none,
@@ -118,7 +118,7 @@ TextStyle typeOfCarFont = GoogleFonts.staatliches(
   decoration: TextDecoration.none,
 );
 TextStyle priceOfProductDetailFont = GoogleFonts.teko(
-  fontSize: 24,
+  fontSize: 18,
   color: green,
   fontWeight: FontWeight.bold,
   decoration: TextDecoration.none,

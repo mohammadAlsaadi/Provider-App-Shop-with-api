@@ -5,16 +5,16 @@ class Product {
   final String description;
   final String category;
   final String image;
-  int? itemCount;
+  int productCounter = 0;
 
-  Product(
-      {required this.id,
-      required this.title,
-      required this.price,
-      required this.description,
-      required this.category,
-      required this.image,
-      this.itemCount});
+  Product({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.description,
+    required this.category,
+    required this.image,
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(

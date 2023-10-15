@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:statemanagement/data/home_page/home_page_models/products.dart';
+import 'package:statemanagement/Screen/home_page/home_page.dart';
 import 'package:statemanagement/data/home_page/home_page_provider/home_page_provider.dart';
 import 'package:statemanagement/utils/colors/color.dart';
-import 'package:statemanagement/data/home_page/home_page_provider/cart.dart';
 import 'package:statemanagement/utils/font/font.dart';
 
 class CheckOut extends StatefulWidget {
@@ -20,8 +19,8 @@ class _CheckOutState extends State<CheckOut> {
     double pageHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: Center(
+        // backgroundColor: appBarColor,
+        title: const Center(
           child: Text(
             'Checkout',
             style: TextStyle(color: white),
@@ -45,7 +44,7 @@ class _CheckOutState extends State<CheckOut> {
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: ListView.builder(
-                                itemCount: product.basketItem.length,
+                                itemCount: product.basketItems.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: EdgeInsets.only(
@@ -55,15 +54,15 @@ class _CheckOutState extends State<CheckOut> {
                                         children: [
                                           ListTile(
                                             leading: Image.network(
-                                              product.basketItem[index].image,
+                                              product.basketItems[index].image,
                                               width: pageWidth * 0.16,
                                             ),
                                             title: Text(
-                                              '${product.basketItem[index].title}',
+                                              product.basketItems[index].title,
                                               style: titleOfCard,
                                             ),
                                             subtitle: Text(
-                                                '${product.basketItem[index].price} \$'),
+                                                '${product.basketItems[index].price} \$'),
                                             subtitleTextStyle: subTitleOfCard,
                                           ),
                                           Align(
@@ -71,9 +70,9 @@ class _CheckOutState extends State<CheckOut> {
                                             child: IconButton(
                                                 onPressed: () {
                                                   product.removeItem(product
-                                                      .basketItem[index]);
+                                                      .basketItems[index]);
                                                 },
-                                                icon: Icon(
+                                                icon: const Icon(
                                                   Icons.remove,
                                                   size: 30,
                                                   color: appBarColor,
@@ -99,7 +98,7 @@ class _CheckOutState extends State<CheckOut> {
                                     'Item count',
                                     style: labelCheckout,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 40,
                                   ),
                                   Text(
@@ -115,7 +114,7 @@ class _CheckOutState extends State<CheckOut> {
                                     'Total Price',
                                     style: labelCheckout,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                   Text(
@@ -133,14 +132,16 @@ class _CheckOutState extends State<CheckOut> {
                             onPressed: () {
                               product.removeBasket();
                               Navigator.pop(context);
-                              final snackBar = SnackBar(
+                              const snackBar = SnackBar(
                                   content: Text('Checkout successfully !'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             },
-                            color: appBarColor,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
+                            color: darkMode
+                                ? darkThemeBackgroundColor
+                                : appBarColor,
+                            child: const Padding(
+                              padding: EdgeInsets.only(
                                   left: 50, right: 50, top: 20, bottom: 20),
                               child: Text(
                                 'Checkout',
@@ -169,7 +170,9 @@ class _CheckOutState extends State<CheckOut> {
                             width: pageWidth * 0.4,
                             height: pageHeight * 0.05,
                             decoration: BoxDecoration(
-                                color: appBarColor,
+                                color: darkMode
+                                    ? darkThemeBackgroundColor
+                                    : appBarColor,
                                 borderRadius: BorderRadius.circular(7)),
                             child: Center(
                               child: Text(

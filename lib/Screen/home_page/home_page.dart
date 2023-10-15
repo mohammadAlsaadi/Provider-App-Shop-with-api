@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statemanagement/Screen/detail/detail.dart';
 import 'package:statemanagement/data/home_page/home_page_provider/home_page_provider.dart';
+import 'package:statemanagement/theme/theme_manager.dart';
 import 'package:statemanagement/utils/colors/color.dart';
 import 'package:statemanagement/Screen/checkout/checkout.dart';
 
 import 'package:statemanagement/utils/font/font.dart';
+
+bool darkMode = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,20 +18,76 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.darkTheme =
+        await themeChangeProvider.darkThemePreference.getTheme();
+  }
+
+  @override
   void initState() {
     super.initState();
+    getCurrentAppTheme();
+
     Provider.of<ProductProvider>(context, listen: false).fetchProducts();
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+
+    // final providerTheme = Provider.of<ThemeManager>(context);
     double pageWidth = MediaQuery.of(context).size.width;
     double pageHeight = MediaQuery.of(context).size.height;
     return Consumer<ProductProvider>(
       builder: (context, product, child) {
         return Scaffold(
-          drawer: const Drawer(backgroundColor: appBarColor),
-          backgroundColor: darkThemeBackgroundColor,
+          drawer: Drawer(
+            // shadowColor: appBarColor,
+            // backgroundColor: appBarColor,
+
+            child: Container(
+              decoration: const BoxDecoration(),
+              child: ListView(children: [
+                const DrawerHeader(
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    children: [Text("More options ")],
+                  ),
+                ),
+                ListTile(
+                  title: Row(
+                    children: [
+                      Switch(
+                        // This bool value toggles the switch.
+                        value: themeChange.darkTheme,
+
+                        activeColor: grey,
+                        onChanged: (bool value) {
+                          themeChange.darkTheme = value!;
+                          value ? darkMode = true : darkMode = false;
+                          // This is called when the user toggles the switch.
+                        },
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      const Icon(Icons.dark_mode_outlined, color: white),
+                      const SizedBox(
+                        width: 7,
+                      ),
+                      const Text("Dark mode", style: TextStyle(color: white)),
+                    ],
+                  ),
+                  onTap: () {
+                    // providerTheme.toggleTheme(true);
+                  },
+                )
+              ]),
+            ),
+          ),
+          // backgroundColor: lightGrey,
           appBar: AppBar(
             title: Row(
               children: [
@@ -70,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ),
-            backgroundColor: appBarColor,
+            // backgroundColor: appBarColor,
           ),
           body: Stack(
             children: [
@@ -90,10 +149,11 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DetailPage(),
+                                builder: (context) => const DetailPage(),
                               ));
                         },
                         child: Card(
+                          // color: lightThemeBackgroundColor,
                           child: Stack(
                             children: [
                               Padding(
@@ -102,13 +162,14 @@ class _HomePageState extends State<HomePage> {
                                     leading: Image.network(
                                       product.products[index].image,
                                       width: pageWidth * 0.16,
+                                      // fit: BoxFit.fill,
                                     ),
                                     title: Text(
-                                      '${product.products[index].title}',
+                                      product.products[index].title,
                                       style: titleOfCard,
                                     ),
                                     subtitle: Text(
-                                      '${product.products[index].category}',
+                                      product.products[index].category,
                                     )),
                               ),
                               Column(
@@ -137,7 +198,9 @@ class _HomePageState extends State<HomePage> {
                                               product.addItem(
                                                   product.products[index]);
                                             },
-                                            color: appBarColor,
+                                            color: darkMode
+                                                ? darkThemeBackgroundColor
+                                                : appBarColor,
                                             child: Text(
                                               'Add to cart',
                                               style: buttonBasketFont,
@@ -174,7 +237,9 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: appBarColor,
+                                color: darkMode
+                                    ? darkThemeBackgroundColor
+                                    : appBarColor,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               children: [
@@ -182,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                                   padding:
                                       EdgeInsets.only(left: pageWidth * 0.05),
                                   child: CircleAvatar(
-                                    backgroundColor: lightRed,
+                                    backgroundColor: darkMode ? grey : lightRed,
                                     child: Text('${product.count}'),
                                   ),
                                 ),
@@ -198,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                   padding:
                                       EdgeInsets.only(left: pageWidth * 0.1),
                                   child: Text(
-                                    '${product.price}',
+                                    '${product.price} \$',
                                     style: buttonBasketFont,
                                   ),
                                 )
